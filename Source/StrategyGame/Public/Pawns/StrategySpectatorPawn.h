@@ -5,6 +5,7 @@
 #include "StrategyTypes.h"
 #include "StrategySpectatorPawn.generated.h"
 
+//特殊的pawn，控制相机移动
 //@TODO: Write a comment here
 UCLASS(Blueprintable, BlueprintType)
 class AStrategySpectatorPawn : public ASpectatorPawn
