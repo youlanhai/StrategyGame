@@ -9,6 +9,7 @@
 AStrategyGameMode::AStrategyGameMode(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)
 {
+	// 设置默认类型属性
 	PlayerControllerClass = AStrategyPlayerController::StaticClass();
 	SpectatorClass = AStrategySpectatorPawn::StaticClass();
 	DefaultPawnClass = AStrategySpectatorPawn::StaticClass();
@@ -121,6 +122,7 @@ void AStrategyGameMode::FinishGame(EStrategyTeam::Type InWinningTeam)
 
 void AStrategyGameMode::ReturnToMenu()
 {
+	// 打开关卡
 	GetWorld()->ServerTravel(FString("/Game/Maps/StrategyMenu"));
 }
 

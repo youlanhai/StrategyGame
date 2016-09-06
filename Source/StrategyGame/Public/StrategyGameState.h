@@ -9,7 +9,7 @@
 class AStrategyChar;
 /*class AStrategyMiniMapCapture;*/
 
-/* 游戏状态类。
+/* 游戏状态类，只记录状态和数据，不作逻辑处理。
  *  记录游戏难度、是否暂停、各个阵营存活的角色数量、胜利的阵营等。
  */
 
@@ -28,6 +28,7 @@ public:
 	/** World bounds for mini map & camera movement. */
 	FBox WorldBounds;
 
+	// 游戏开始前的等待时间
 	/** Warm up time before game starts */
 	UPROPERTY(config)
 	int32 WarmupTime;
@@ -123,7 +124,7 @@ public:
 	void SetGameDifficulty(EGameDifficulty::Type NewDifficulty);
 
 protected:
-	
+	// 两个阵营的玩家数据
 	// @todo, get rid of mutable?
 	/** Gameplay information about each player. */	
 	mutable TArray<FPlayerData> PlayersData;

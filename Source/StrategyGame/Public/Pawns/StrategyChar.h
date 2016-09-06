@@ -15,10 +15,12 @@ class AStrategyChar : public ACharacter, public IStrategyTeamInterface
 {
 	GENERATED_UCLASS_BODY()
 
+	// 当前角色死亡后，可以获得的资源数量
 	/** How many resources this pawn is worth when it dies. */
 	UPROPERTY(EditAnywhere, Category=Pawn)
 	int32 ResourcesToGather;
 
+	// 表示当前pawn在死亡状态中
 	/** Identifies if pawn is in its dying state */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category=Health)
 	uint32 bIsDying:1;
@@ -52,6 +54,7 @@ public:
 	/** don't export collisions for navigation */
 	virtual bool IsComponentRelevantForNavigation(UActorComponent* Component) const override { return false; }
 
+	// 处理受到的伤害
 	/** Take damage, handle death */
 	virtual float TakeDamage(float Damage, struct FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser) override;
 
@@ -65,12 +68,14 @@ public:
 	// End StrategyTeamInterface interface
 
 
+	// 播放格斗动画
 	/** 
 	 * Starts melee attack. 
 	 * @return Duration of the attack anim.
 	 */
 	float PlayMeleeAnim();
 
+	// "格斗动画"触发"作用"事件
 	/** Notification triggered from the melee animation to signal impact. */
 	void OnMeleeImpactNotify();
 
@@ -91,6 +96,7 @@ public:
 	/** set team number */
 	void SetTeamNum(uint8 NewTeamNum); 
 
+	// 添加一个buff
 	/** adds active buff to this pawn */
 	void ApplyBuff(const struct FBuffData& Buff);
 
@@ -109,10 +115,12 @@ public:
 	const FPawnData& GetModifiedPawnData() { return ModifiedPawnData; }
 
 protected:
+	// 格斗动画
 	/** melee anim */
 	UPROPERTY(EditDefaultsOnly, Category=Pawn)
 	UAnimMontage* MeleeAnim;
 
+	// 死亡动画
 	/** death anim */
 	UPROPERTY(EditDefaultsOnly, Category=Pawn)
 	UAnimMontage* DeathAnim;
@@ -125,33 +133,41 @@ protected:
 	UPROPERTY()
 	UStrategyAttachment* WeaponSlot;
 
+	// 阵营编号
 	/** team number */
 	uint8 MyTeamNum;
 
+	// 基础属性数据
 	/** base pawn data */
 	UPROPERTY(EditDefaultsOnly, Category=Pawn)
 	FPawnData PawnData;
 
+	// 受buff影响后的数据
 	/** pawn data with added buff effects */
 	FPawnData ModifiedPawnData;
 
+	// 活跃的buff
 	/** List of active buffs */
 	TArray<struct FBuffData> ActiveBuffs;
 
+	// 刷新buff所产生的效果
 	/** update pawn data after changes in active buffs */
 	void UpdatePawnData();
 
+	// 计算持续性的伤害
 	/** update pawn's health */
 	void UpdateHealth();
 
+	// 死亡动画播放完毕回调。timer回调。
 	/** event called after die animation  to hide character and delete it asap */
 	void OnDieAnimationEnd();
 
 private:
-
+	// timer句柄。刷新角色数据
 	/** Handle for efficient management of UpdatePawnData timer */
 	FTimerHandle TimerHandle_UpdatePawnData;
 
+	// timer句柄。刷新角色血量。
 	/** Handle for efficient management of UpdateHealth timer */
 	FTimerHandle TimerHandle_UpdateHealth;
 };

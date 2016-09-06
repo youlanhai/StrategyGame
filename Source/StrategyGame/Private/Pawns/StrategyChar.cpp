@@ -41,6 +41,7 @@ bool AStrategyChar::CanBeBaseForCharacter(APawn* Pawn) const
 	return false;
 }
 
+// 碰撞回调
 void AStrategyChar::NotifyHit(UPrimitiveComponent* MyComp, AActor* Other, UPrimitiveComponent* OtherComp, bool bSelfMoved, FVector HitLocation, FVector HitNormal, FVector NormalForce, const FHitResult& Hit)
 {
 	Super::NotifyHit(MyComp, Other, OtherComp, bSelfMoved, HitLocation, HitNormal, NormalForce, Hit);
@@ -56,6 +57,7 @@ void AStrategyChar::NotifyHit(UPrimitiveComponent* MyComp, AActor* Other, UPrimi
 	}
 }
 
+// 播放格斗动画
 float AStrategyChar::PlayMeleeAnim()
 {
 	if ( (Health > 0.f) && MeleeAnim )
@@ -71,6 +73,7 @@ void AStrategyChar::OnMeleeImpactNotify()
 	const int32 MeleeDamage = FMath::RandRange(ModifiedPawnData.AttackMin, ModifiedPawnData.AttackMax);
 	const TSubclassOf<UDamageType> MeleeDmgType = UDamageType::StaticClass();
 
+	// 射线检测碰到的物体
 	// Do a trace to see what we hit
 	const float CollisionRadius = GetCapsuleComponent() ? GetCapsuleComponent()->GetScaledCapsuleRadius() : 0.f;
 	const float TraceDistance = CollisionRadius + (ModifiedPawnData.AttackDistance * 1.3f);
@@ -105,6 +108,7 @@ float AStrategyChar::TakeDamage(float Damage, struct FDamageEvent const& DamageE
 		return 0.f;
 	}
 
+	// 根据游戏规则修改伤害数值
 	// Modify based on game rules.
 	AStrategyGameMode* const Game = GetWorld()->GetAuthGameMode<AStrategyGameMode>();
 	Damage = Game ? Game->ModifyDamage(Damage, this, DamageEvent, EventInstigator, DamageCauser) : 0.f;
@@ -118,6 +122,7 @@ float AStrategyChar::TakeDamage(float Damage, struct FDamageEvent const& DamageE
 			Die(ActualDamage, DamageEvent, EventInstigator, DamageCauser);
 		}
 
+		// ? 这里不明白
 		// broadcast AI-detectable noise
 		MakeNoise(1.0f, EventInstigator ? EventInstigator->GetPawn() : this);
 
@@ -329,6 +334,7 @@ void AStrategyChar::UpdatePawnData()
 			continue;
 		}
 
+		// 修正下一次timer的时间间隔
 		if (TimeToNextUpdate < 0 || TimeToNextUpdate > ActiveBuffs[i].EndTime - CurrentTime)
 		{
 			TimeToNextUpdate = ActiveBuffs[i].EndTime - CurrentTime;
